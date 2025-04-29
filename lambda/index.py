@@ -6,8 +6,7 @@ import re  # 正規表現モジュールをインポート
 from botocore.exceptions import ClientError
 import urllib.request
 
-url = 'https://79b5-34-125-35-160.ngrok-free.app/docs#/default/generate_simple_generate_post'
-
+url = 'https://79b5-34-125-35-160.ngrok-free.app/generate'
 # Lambda コンテキストからリージョンを抽出する関数
 def extract_region_from_arn(arn):
     # ARN 形式: arn:aws:lambda:region:account-id:function:function-name
@@ -71,7 +70,8 @@ def lambda_handler(event, context):
             raise Exception("No response content from the model")
         
         out_response = out_body['generated_text']
-
+        messages = [out_response]
+        
         # アシスタントの応答を取得
         assistant_response = "あ"
         
@@ -87,7 +87,7 @@ def lambda_handler(event, context):
             "body": json.dumps({
                 "success": True,
                 "response": assistant_response,
-                "conversationHistory": out_response
+                "conversationHistory": messages
             })
         }
         
