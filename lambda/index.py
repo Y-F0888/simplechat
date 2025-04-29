@@ -58,9 +58,8 @@ def lambda_handler(event, context):
         
         print("Calling FastAPI with payload:", json.dumps(request_payload))
 
-        req = urllib.request.Request('{}?{}'.format(url, urllib.parse.urlencode(request_payload)))
-        with urllib.request.urlopen(req) as res:
-            out_body = res.read()
+        with urllib.request.urlopen(url, data = json.dumps(request_payload)) as res:
+            out_body = json.loads(res.read())
         
         # レスポンスを解析
         print("FastAPI response:", json.dumps(out_body, default=str))
@@ -71,7 +70,7 @@ def lambda_handler(event, context):
         
         out_response = out_body['generated_text']
         messages = [out_response]
-        
+
         # アシスタントの応答を取得
         assistant_response = "あ"
         
