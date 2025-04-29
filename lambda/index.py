@@ -41,13 +41,15 @@ def lambda_handler(event, context):
         # リクエストボディの解析
         body = json.loads(event['body'])
         message = body['message']
-        conversation_history = body.get('conversationHistory', [])
         
         print("Processing message:", message)
         print("Using model:", MODEL_ID)
         
         # ユーザーメッセージを追加        
         # FastAPI用のリクエストペイロード
+        headers = {'accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
         request_payload = {
             "prompt": message,
             "max_new_tokens": 512,
@@ -58,7 +60,7 @@ def lambda_handler(event, context):
         
         print("Calling FastAPI with payload:", json.dumps(request_payload))
 
-        with urllib.request.urlopen(url, data = json.dumps(request_payload).encode('utf-8')) as res:
+        with urllib.request.urlopen(url, data = json.dumps(request_payload).encode('utf-8'),headers) as res:
             out_body = json.loads(res.read().decode('utf-8'))
         
         # レスポンスを解析
@@ -72,7 +74,7 @@ def lambda_handler(event, context):
         messages = [out_response]
 
         # アシスタントの応答を取得
-        assistant_response = "あ"
+        assistant_response = ""
         
         # 成功レスポンスの返却
         return {
