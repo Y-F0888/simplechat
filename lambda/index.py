@@ -58,8 +58,8 @@ def lambda_handler(event, context):
         
         print("Calling FastAPI with payload:", json.dumps(request_payload))
 
-        with urllib.request.urlopen(url, data = json.dumps(request_payload).encode()) as res:
-            out_body = json.loads(res.read().decode())
+        with urllib.request.urlopen(url, data = json.dumps(request_payload).encode('utf-8')) as res:
+            out_body = json.loads(res.read().decode('utf-8'))
         
         # レスポンスを解析
         print("FastAPI response:", json.dumps(out_body, default=str))
